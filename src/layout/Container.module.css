@@ -1,0 +1,12 @@
+.main_container {
+    padding: 15px;
+}
+
+.sub_container {
+    max-width: 768px;
+    margin: auto;
+}
+
+.background_blue {
+    background-color: blue;
+}

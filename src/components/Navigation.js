@@ -4,8 +4,6 @@ import Header from './Header'
 
 function Navigation() {
 
-    console.log(classes)
-
     return (
         <Header>
             <nav className={classes.nav}>
@@ -14,7 +12,7 @@ function Navigation() {
                 </div>
                 <ul>
                     <li><Link to='/'>All Blogs</Link></li>
-                    <li><Link to='/hello'>Modify Blog</Link></li>
+                    <li><Link to='/modify-blog'>Modify Blog</Link></li>
                 </ul>
             </nav>
         </Header>
