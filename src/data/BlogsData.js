@@ -1,4 +1,4 @@
-const blogs = [
+const BlogsData = [
     {
         id: 1,
         image_url: 'https://placehold.co/1200x630',
@@ -27,3 +27,5 @@ const blogs = [
         date_posted: 'July 03, 2023'
     },
 ]
+
+export default BlogsData
