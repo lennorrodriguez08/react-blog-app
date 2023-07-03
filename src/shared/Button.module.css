@@ -7,6 +7,10 @@
     padding: 10px 50px;
 }
 
+.button a {
+    color: #f7e0e0;
+}
+
 .button:hover {
     cursor: pointer;
 }
