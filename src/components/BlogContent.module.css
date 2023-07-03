@@ -1,0 +1,12 @@
+.article {
+    padding: 15px 0;
+    margin: 10px 0 20px 0;
+}
+
+.article h2 {
+    padding: 7px 0;
+}
+
+.article p:last-child {
+    padding: 7px 0;
+}
