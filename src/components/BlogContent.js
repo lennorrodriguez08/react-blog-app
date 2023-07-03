@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPen, faCalendar } from '@fortawesome/free-solid-svg-icons'
 import Button from '../shared/Button'
@@ -13,10 +14,10 @@ function BlogContent( { blogsData } ) {
                     <article className={classes.article} id={blog.id} key={blog.id}>
                         <img src={blog.image_url} alt="Blog" width='100%' />
                         <h2>{blog.title}</h2>
-                        <p><FontAwesomeIcon icon={faUserPen} /> {blog.author}</p>
+                        <p><FontAwesomeIcon icon={faUserPen} /> <a href="https://github.com/lennorrodriguez08/react-blog-app" target='_blank' rel='noreferrer'>{blog.author}</a></p>
                         <p><FontAwesomeIcon icon={faCalendar} />&nbsp;&nbsp;{blog.date_posted}</p>
                         <p>{blog.introductory}</p>
-                        <Button>Read more</Button>
+                        <Button><Link to="/modify-blog">Read more</Link></Button>
                     </article>
                 )
             }) }
