@@ -1,0 +1,29 @@
+.modify_blog label {
+    display: block;
+    padding: 8px 0;
+}
+
+.modify_blog input {
+    width: 100%;
+    display: block;
+    padding: 5px;
+}
+
+.modify_blog select, .modify_blog textarea {
+    width: 100%;
+    display: block;
+    padding: 5px
+}
+
+.modify_blog textarea {
+    height: 70px;
+    padding: 5px
+}
+
+.modify_blog form div:nth-of-type(5) textarea {
+    height: 120px;
+}
+
+.modify_blog form div:last-child {
+    margin: 15px 0;
+}
