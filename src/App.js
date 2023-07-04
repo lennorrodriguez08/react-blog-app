@@ -8,6 +8,10 @@ import BlogsData from "./data/BlogsData";
 
 function App() {
   const [blogsData, setBlogsData] = useState(BlogsData)
+
+  const addBlog = (newData) => {
+    setBlogsData(newData)
+  }
   
   return (
     <Router>
@@ -15,7 +19,7 @@ function App() {
         <Container>
           <Routes>
             <Route exact path='/' element={ <AllBlogs blogsData={blogsData} /> } />
-            <Route path='/modify-blog' element={ <ModifyBlog /> } />
+            <Route path='/modify-blog' element={ <ModifyBlog blogsData={blogsData} addBlog={addBlog} /> } />
           </Routes>
         </Container>
     </Router>
