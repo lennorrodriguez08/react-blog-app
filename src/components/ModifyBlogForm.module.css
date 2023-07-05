@@ -10,15 +10,33 @@
     font-size: 16px;
 }
 
-.modify_blog textarea {
-    height: 70px;
+.modify_blog .modify_blog_form_intro {
+    height: 85px;
     padding: 5px
 }
 
-.modify_blog form div:nth-of-type(5) textarea {
-    height: 120px;
+.modify_blog .modify_blog_form_article {
+    height: 285px;
 }
 
-.modify_blog form div:last-child {
-    margin: 15px 0;
+
+
+.modify_blog input[type=radio] {
+    display: inline-block;
+    width: auto!important;
+    margin-right: 5px;
+    padding-right: 10px;
+}
+
+.form_group_radio {
+    display: flex;
+    padding: 10px 0;
+}
+
+.form_group_radio div {
+    margin-right: 10px;
+}
+
+.form_group_radio div label {
+    display: inline!important;
 }
