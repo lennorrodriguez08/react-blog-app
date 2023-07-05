@@ -16,7 +16,7 @@ function ModifyBlogForm({ blogsData, modifyBlogs }) {
     const [introWarning, setIntroWarning] = useState('*Intro must be minimum of 50 words')
     const [mainArticleWarning, setMainArticleWarning] = useState('*Article must be minimum of 200 words')
 
-    const [editModeId, setEditModeId] = useState(0)
+    const [editModeId, setEditModeId] = useState(' ')
     const [editModeImageUrl, setEditModeImageUrl]= useState('')
     const [editModeTitle, setEditModeTitle]= useState('')
     const [editModeIntro, setEditModeIntro]= useState('')
@@ -144,6 +144,20 @@ function ModifyBlogForm({ blogsData, modifyBlogs }) {
             
             modifyBlogs([...updatedBlog, newBlog])
             setSubmitMessage('Blog has been updated')
+        }   else if (checkModification === 'Delete blog') {
+
+            const confirmed = window.confirm('Warning: You are about to delete a blog.\nPlease click "OK" to confirm')
+           
+                if (confirmed) {
+                    modifyBlogs(blogsData.filter((blog) => (blog.id !== editModeId)))
+                    setSubmitMessage('Blog has been deleted')
+                }
+            
+                setEditModeImageUrl('')
+                setEditModeTitle('')
+                setEditModeIntro('')
+                setEditModeMainArticle('')
+                setEditModeAuthor('')
         }
 
         setEditModeId(0)
@@ -167,7 +181,7 @@ function ModifyBlogForm({ blogsData, modifyBlogs }) {
         setCheckModification(e.currentTarget.value)
 
         if (e.currentTarget.value === 'Create blog') {
-            setEditModeId(0)
+            setEditModeId(' ')
             setEditModeImageUrl('')
             setEditModeTitle('')
             setEditModeIntro('')
@@ -175,6 +189,7 @@ function ModifyBlogForm({ blogsData, modifyBlogs }) {
             setEditModeAuthor('')
             setIntroWarning('*Intro must be minimum of 50 words')
             setMainArticleWarning('*Article must be minimum of 200 words')
+            
         }   else if (e.currentTarget.value === 'Update blog') {
             setImageUrl('')
             setTitle('')
@@ -183,9 +198,15 @@ function ModifyBlogForm({ blogsData, modifyBlogs }) {
             setAuthor('')
             setIntroWarning('*Intro must be minimum of 50 words')
             setMainArticleWarning('*Article must be minimum of 200 words')
+
         }   else if (e.currentTarget.value === 'Delete blog') {
             setIntroWarning('')
             setMainArticleWarning('')
+            setImageUrl('')
+            setTitle('')
+            setIntro('')
+            setMainArticle('')
+            setAuthor('')
         }
     }
 
@@ -195,9 +216,9 @@ function ModifyBlogForm({ blogsData, modifyBlogs }) {
                 <p className="pt_10 pb_5">Select type of modification</p>
                 <div className={classes.form_group_radio}>
                     {
-                        ['Create blog', 'Update blog', 'Delete blog'].map(item => {
+                        ['Create blog', 'Update blog', 'Delete blog'].map((item, index) => {
                             return (
-                                <div>
+                                <div key={index}>
                                     <input type="radio" checked={ checkModification === item } id={item.replace(' ', '_').toLowerCase()} name="modification" onChange={ selectModification } value={ item } />
                                     <label htmlFor={item.trim().replace(' ', '_').toLowerCase()}>{ item }</label>
                                 </div>
@@ -210,7 +231,6 @@ function ModifyBlogForm({ blogsData, modifyBlogs }) {
                     <div>
                         <p className="pt_10 pb_10">Select Blog ID</p>
                         <select onChange={editModeIdHandler}>
-                            <option value=""></option>
                         { blogsData.map(blog => <option value={blog.id}>{blog.id}</option>) }
                         </select>
                     </div>
