@@ -2,22 +2,26 @@ import { useState } from "react"
 import Button from "../shared/Button"
 import classes from './ModifyBlogForm.module.css'
 
-function ModifyBlogForm({ blogsData, addBlog }) {
+function ModifyBlogForm({ blogsData, modifyBlogs }) {
 
-    const [selectIsDisbladed, setSelectIsDisbladed] = useState(false)
-    const [selectModifyBlog, setSelectModifyBlog] = useState(['Create blog', 'Update blog', 'Delete blog'])
-    const [imageUrl, setImageUrl] = useState('https://placehold.co/1200x630')
+    const [checkModification, setCheckModification] = useState('Create blog')
+    const [imageUrl, setImageUrl] = useState('')
     const [title, setTitle] = useState('')
     const [intro, setIntro] = useState('')
     const [mainArticle, setMainArticle] = useState('')
     const [author, setAuthor] = useState('')
     const [submitMessage, setSubmitMessage] = useState('')
+    const [splitIntroWords, setSplitIntroWords] = useState('')
+    const [splitMainArticleWords, setSplitMainArticleWords] = useState('')
+    const [introWarning, setIntroWarning] = useState('*Intro must be minimum of 50 words')
+    const [mainArticleWarning, setMainArticleWarning] = useState('*Article must be minimum of 200 words')
 
-    const selectHandler = (e) => {
-        let selectCurrentValue = e.currentTarget.value
-        setSelectModifyBlog([selectCurrentValue])
-        setSelectIsDisbladed(true)
-    }
+    const [editModeId, setEditModeId] = useState(0)
+    const [editModeImageUrl, setEditModeImageUrl]= useState('')
+    const [editModeTitle, setEditModeTitle]= useState('')
+    const [editModeIntro, setEditModeIntro]= useState('')
+    const [editModeMainArticle, setEditModeMainArticle]= useState('')
+    const [editModeAuthor, setEditModeAuthor]= useState('')
 
     const imageUrlHandler = (e) => {
         setImageUrl(e.currentTarget.value)
@@ -29,33 +33,39 @@ function ModifyBlogForm({ blogsData, addBlog }) {
 
     const introHandler = (e) => {
         setIntro(e.currentTarget.value) 
+        setSplitIntroWords(e.currentTarget.value.split(' '))
+    }
+
+    const editIntroHandler = (e) => {
+        setEditModeIntro(e.currentTarget.value)
+        setSplitIntroWords(e.currentTarget.value.split(' '))
+    }
+
+    const editMainArticleHandler = (e) => {
+        setEditModeMainArticle(e.currentTarget.value)
+        setSplitMainArticleWords(e.currentTarget.value.split(' '))
     }
 
     const mainArticleHandler = (e) => {
         setMainArticle(e.currentTarget.value)
+        setSplitMainArticleWords(e.currentTarget.value.split(' '))
     }
 
     const authorHandler = (e) => {
         setAuthor(e.currentTarget.value)
     }
 
-    const splitIntroWords = intro.split(' ')
-    let introWarning;
-    if (splitIntroWords.length <= 50) {
-        introWarning = '*Intro must be minimum of 50 words'
-    }   else {
-        introWarning = ''
+    const editModeIdHandler = (e) => {
+
+        setEditModeId(Number(e.currentTarget.value))
+        setEditModeImageUrl(blogsData.filter(item => ( item.id === Number(e.currentTarget.value)))[0].image_url)
+        setEditModeTitle(blogsData.filter(item => ( item.id === Number(e.currentTarget.value)))[0].title)
+        setEditModeIntro(blogsData.filter(item => ( item.id === Number(e.currentTarget.value)))[0].introductory)
+        setEditModeMainArticle(blogsData.filter(item => ( item.id === Number(e.currentTarget.value)))[0].article)
+        setEditModeAuthor(blogsData.filter(item => ( item.id === Number(e.currentTarget.value)))[0].author)
     }
 
-    const splitMainArticleWords = mainArticle.split(' ')
-    let mainArticleWarning;
-    if (splitMainArticleWords.length <= 200) {
-        mainArticleWarning = '*Article must be minimum of 200 words'
-    }   else {
-        mainArticleWarning = ''
-    }
-
-    var handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault()
 
         const date = new Date()
@@ -103,25 +113,45 @@ function ModifyBlogForm({ blogsData, addBlog }) {
                 break;    
         }
         
-        const newBlog = {
-            id,
-            image_url: imageUrl,
-            title,
-            introductory: intro,
-            article: mainArticle,
-            author,
-            date_posted: `${month} ${day}, ${year}`
+        if (checkModification === 'Create blog') {
+            
+            const newBlog = {
+                id: id,
+                image_url: imageUrl,
+                title,
+                introductory: intro,
+                article: mainArticle,
+                author,
+                date_posted: `${month} ${day}, ${year}`
+            }
+
+            modifyBlogs([...blogsData, newBlog])
+            setSubmitMessage('New blog has been posted')
+
+        }   else if (checkModification === 'Update blog') {
+
+            const newBlog = {
+                id: editModeId,
+                image_url: editModeImageUrl,
+                title: editModeTitle,
+                introductory: editModeIntro,
+                article: editModeMainArticle,
+                author: editModeAuthor,
+                date_posted: `${month} ${day}, ${year}`
+            }
+
+            const updatedBlog = blogsData.filter(blog => ( blog.id !== editModeId ))
+            
+            modifyBlogs([...updatedBlog, newBlog])
+            setSubmitMessage('Blog has been updated')
         }
 
-        addBlog([...blogsData, newBlog])
-
-        setSelectModifyBlog(['Create blog', 'Update blog', 'Delete blog'])
-        setSelectIsDisbladed(false)
+        setEditModeId(0)
+        setImageUrl('')
         setTitle('')
         setIntro('')
         setMainArticle('')
         setAuthor('')
-        setSubmitMessage('New blog has been posted')
         showHideSubmitMessage()
         document.querySelector('#unique_one').style.display = 'block'
         
@@ -130,50 +160,121 @@ function ModifyBlogForm({ blogsData, addBlog }) {
     function showHideSubmitMessage() {
         setTimeout(function() {
             document.querySelector('#unique_one').style.display = 'none'
-        }, 5000)
+        }, 3000)
+    }
+
+    const selectModification = (e) => {
+        setCheckModification(e.currentTarget.value)
+
+        if (e.currentTarget.value === 'Create blog') {
+            setEditModeId(0)
+            setEditModeImageUrl('')
+            setEditModeTitle('')
+            setEditModeIntro('')
+            setEditModeMainArticle('')
+            setEditModeAuthor('')
+            setIntroWarning('*Intro must be minimum of 50 words')
+            setMainArticleWarning('*Article must be minimum of 200 words')
+        }   else if (e.currentTarget.value === 'Update blog') {
+            setImageUrl('')
+            setTitle('')
+            setIntro('')
+            setMainArticle('')
+            setAuthor('')
+            setIntroWarning('*Intro must be minimum of 50 words')
+            setMainArticleWarning('*Article must be minimum of 200 words')
+        }   else if (e.currentTarget.value === 'Delete blog') {
+            setIntroWarning('')
+            setMainArticleWarning('')
+        }
     }
 
     return (
         <div className={classes.modify_blog}>
             <form onSubmit={handleSubmit} id="modify-blog-form">
-                <div>
-                    <label htmlFor="modify-blog-form-select">Select type of modification</label>
-                    <select disabled={selectIsDisbladed} onChange={selectHandler} id="modify-blog-form-select">
-                        { selectModifyBlog.map(select => <option value={select}>{select}</option>) }
-                    </select>
+                <p className="pt_10 pb_5">Select type of modification</p>
+                <div className={classes.form_group_radio}>
+                    {
+                        ['Create blog', 'Update blog', 'Delete blog'].map(item => {
+                            return (
+                                <div>
+                                    <input type="radio" checked={ checkModification === item } id={item.replace(' ', '_').toLowerCase()} name="modification" onChange={ selectModification } value={ item } />
+                                    <label htmlFor={item.trim().replace(' ', '_').toLowerCase()}>{ item }</label>
+                                </div>
+                            )
+                        })
+                    }
+                   
                 </div>
+                { ((checkModification === 'Update blog') || (checkModification === 'Delete blog')) && (
+                    <div>
+                        <p className="pt_10 pb_10">Select Blog ID</p>
+                        <select onChange={editModeIdHandler}>
+                            <option value=""></option>
+                        { blogsData.map(blog => <option value={blog.id}>{blog.id}</option>) }
+                        </select>
+                    </div>
+                ) }
                 <div>
                     <label htmlFor="modify-blog-form-image-url">Image URL</label>
+                   { checkModification === 'Create blog' && (
                     <input type="url" id="modify-blog-form-image-url" required value={imageUrl} onChange={imageUrlHandler} />
+                   ) }
+                   { ((checkModification === 'Update blog') || (checkModification === 'Delete blog')) && (
+                    <input type="url" id="modify-blog-form-image-url" disabled={checkModification === 'Delete blog'} required value={editModeImageUrl} onChange={(e) => setEditModeImageUrl(e.currentTarget.value)} />
+                   ) }
                 </div>
                 <div>
                     <label htmlFor="modify-blog-form-title">Title</label>
-                    <input type="text" id="modify-blog-form-image-title" required value={title} onChange={titlelHandler} />
+                    { checkModification === 'Create blog' && (
+                        <input type="text" id="modify-blog-form-image-title" required value={title} onChange={titlelHandler} />
+
+                    ) }
+                    { ((checkModification === 'Update blog') || (checkModification === 'Delete blog')) && (
+                        <input type="text" id="modify-blog-form-image-title" disabled={checkModification === 'Delete blog'} required value={editModeTitle} onChange={(e) => setEditModeTitle(e.currentTarget.value)} />
+
+                    ) }
                 </div>
                 <div>
                     <label htmlFor="modify-blog-form-intro">Introductory</label>
-                    <textarea id="modify-blog-form-intro" value={intro} required onChange={introHandler}></textarea>
-                    { <p className='pt_5 helper_text red'>{ introWarning }</p> }
+                    { checkModification === 'Create blog' && (
+                        <textarea className={classes.modify_blog_form_intro} value={intro} required onChange={introHandler}></textarea>
+
+                    ) }
+                    { ((checkModification === 'Update blog') || (checkModification === 'Delete blog')) && (
+                        <textarea className={classes.modify_blog_form_intro} value={editModeIntro} disabled={checkModification === 'Delete blog'} required onChange={editIntroHandler}></textarea>
+
+                    ) }
+                    { <p className='pt_5 helper_text red'>{ splitIntroWords.length <= 50 && introWarning }</p> }
                 </div>
                 <div>
                     <label htmlFor="modify-blog-form-article">Main Article</label>
-                    <textarea id="modify-blog-form-article" value={mainArticle} required onChange={mainArticleHandler}></textarea>
-                    { <p className='pt_5 helper_text red'> { mainArticleWarning } </p> }
+                    { checkModification === 'Create blog' && (
+                        <textarea className={classes.modify_blog_form_article} value={mainArticle} required onChange={mainArticleHandler}></textarea>
+                    ) }
+                    { ((checkModification === 'Update blog') || (checkModification === 'Delete blog')) && (
+                        <textarea className={classes.modify_blog_form_article} value={editModeMainArticle} disabled={checkModification === 'Delete blog'} required onChange={editMainArticleHandler}></textarea>
+                    ) }
+                    { <p className='pt_5 helper_text red'> { splitMainArticleWords.length <= 200 && mainArticleWarning } </p> }
                 </div>
                 <div>
                     <label htmlFor="modify-blog-form-author">Author</label>
-                    <input type="text" id="modify-blog-form-author" required value={author} onChange={authorHandler} />
+                    { checkModification === 'Create blog' && (
+                        <input type="text" id="modify-blog-form-author" required value={author} onChange={authorHandler} />
+                    ) }
+                    { ((checkModification === 'Update blog') || (checkModification === 'Delete blog')) && (
+                        <input type="text" id="modify-blog-form-author" disabled={checkModification === 'Delete blog'} required value={editModeAuthor} onChange={(e) => setEditModeAuthor(e.currentTarget.value)} />
+                    ) }
                 </div>
                 <div>
                     <p id="unique_one" className="pt_5 green strong">{ submitMessage }</p>
                 </div>
-                <div>
+                <div className="pt_10 pb_10">
                     <Button>Submit</Button>
                 </div>
             </form>
         </div>
     )
-
 }
 
 export default ModifyBlogForm
