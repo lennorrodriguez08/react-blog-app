@@ -1,10 +1,11 @@
+import BlogContext from '../context/BlogContext'
 import BlogContent from './BlogContent'
 
-function AllBlogsContent( { blogsData } ) {
+function AllBlogsContent() {
    
     return (
         <section id="all-blogs-content">
-            <BlogContent blogsData={blogsData} />
+            <BlogContent />
         </section>
     )
 

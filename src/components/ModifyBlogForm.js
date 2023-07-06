@@ -1,8 +1,11 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import Button from "../shared/Button"
 import classes from './ModifyBlogForm.module.css'
+import BlogContext from "../context/BlogContext"
 
-function ModifyBlogForm({ blogsData, modifyBlogs }) {
+function ModifyBlogForm() {
+
+    const { blogsData, modifyBlogs } = useContext(BlogContext)
 
     const [checkModification, setCheckModification] = useState('Create blog')
     const [imageUrl, setImageUrl] = useState('')

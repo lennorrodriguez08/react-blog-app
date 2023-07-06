@@ -1,14 +1,13 @@
-import { useParams } from "react-router-dom";
-import { Link } from 'react-router-dom'
+import { useContext } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPen, faCalendar, faCircleArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import classes from './BlogContent.module.css'
+import BlogContext from '../context/BlogContext'
 
-function BlogArticle({ blogsData }) {
+function BlogArticle() {
 
-    const { id } = useParams()
-
-    const idParams = blogsData.filter(blog => blog.id === Number(id))
+    const { blogsData } = useContext(BlogContext), { id } = useParams(), idParams = blogsData.filter(blog => blog.id === Number(id))
 
     return (
         <div id="blog-content">
