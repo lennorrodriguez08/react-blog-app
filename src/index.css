@@ -87,3 +87,7 @@ ul li {
 .strong {
   font-weight: bold;
 }
+
+.d-block {
+  display: block;
+}
