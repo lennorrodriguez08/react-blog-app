@@ -1,11 +1,14 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPen, faCalendar } from '@fortawesome/free-solid-svg-icons'
 import Button from '../shared/Button'
 import classes from './BlogContent.module.css'
+import BlogContext from '../context/BlogContext'
 
+function BlogContent() {
 
-function BlogContent( { blogsData } ) {
+    const { blogsData } = useContext(BlogContext)
 
     return (
         <div id="blog-content">
